@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Politician {
   private String name;
   private int id;
+  private static int selectedId = 0;
 
   public Politician(String _name) {
     this.name = _name;
@@ -16,6 +17,14 @@ public class Politician {
 
   public int getId() {
     return this.id;
+  }
+
+  public static int getSelectedId() {
+    return selectedId;
+  }
+
+  public static void setSelectedId(int _selectedId) {
+    selectedId = _selectedId;
   }
 
   public void save() {

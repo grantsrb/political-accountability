@@ -1,0 +1,86 @@
+<div class="row">
+  <div class="col col-md-4">
+    <div id="politicians-list">
+      #if($politicians && $politicians.size() > 0)
+        <ul>
+          #foreach($politician in $politicians)
+            #if($politician.getId() == $selectedPoliticianId)
+              <strong><li><a href="/politicians/$politician.getId()">$politician.getName()</a></li></strong>
+            #else
+              <li><a href="/politicians/$politician.getId()">$politician.getName()</a></li>
+            #end
+          #end
+        </ul>
+      #else
+        <p>No politicians yet!</p>
+      #end
+    </div>
+  </div>
+
+  <div class="col col-md-4">
+    <div id="goals-list">
+      #if($goals && $goals.size() > 0)
+        <ul>
+          #foreach($goal in $goals)
+            #if($goal.getId() == $selectedGoalId)
+              <strong><li><a href="/goals/$goal.getId()">$goal.getDescription()</a></li></strong>
+            #else
+              <li><a href="/goals/$goal.getId()">$goal.getDescription()</a></li>
+            #end
+          #end
+        </ul>
+      #else
+        <p>No goals yet!</p>
+      #end
+    </div>
+  </div>
+
+  <div class="col col-md-4">
+    <div id="reviews-list">
+      #if($reviews && $reviews.size() > 0)
+        <ul>
+          #foreach($review in $reviews)
+            #if($review.getId() == $selectedReviewId)
+              <strong><li><a href="/reviews/$review.getId()">$review.getDescription()</a></li></strong>
+            #else
+              <li><a href="/reviews/$review.getId()">$review.getDescription()</a></li>
+            #end
+          #end
+        </ul>
+      #else
+        <p>No reviews yet!</p>
+      #end
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col col-md-4">
+    <form id="politicians-form" class="form-group" name="politicianInput" action="/politicians/new" method="post">
+      <label for="politicianNameInput">Enter the name of the politician you would like to add to our databse:</label>
+      <input id="politicianNameInput" name="politicianNameInput" type="text" placeholder="enter name here" required>
+      <input type="submit" name="politicianSubmit" value="Add">
+    </form>
+  </div>
+
+  <div class="col col-md-4">
+    #if($selectedPoliticianId > 0)
+      <form id="goals-form" class="form-group" name="goalsInput" action="/goals/new" method="post">
+        <label for="goalDescriptionInput">What did this person promise?:</label>
+        <input id="goalDescriptionInput" name="goalDescriptionInput" type="text" placeholder="enter a stated goal here" required>
+        <input type="submit" name="goalSubmit" value="Add">
+      </form>
+    #end
+  </div>
+
+  <div class="col col-md-4">
+    #if($selectedGoalId > 0)
+      <form id="reviews-form" class="form-group" name="reviewsInput" action="/reviews/new" method="post">
+        <label for="reviewDescriptionInput">How has that panned out?:</label>
+        <input id="reviewDescriptionInput" name="reviewDescriptionInput" type="text" placeholder="enter your review here" required>
+        <input type="submit" name="goalSubmit" value="Add">
+      </form>
+    #end
+  </div>
+</div>

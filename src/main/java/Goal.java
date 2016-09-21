@@ -6,6 +6,7 @@ public class Goal {
   private String description;
   private int id;
   private int politicianId;
+  private static int selectedId = 0;
 
   public Goal(String _description, int _politicianId) {
     this.description = _description;
@@ -22,6 +23,14 @@ public class Goal {
 
   public int getId() {
     return this.id;
+  }
+
+  public static int getSelectedId() {
+    return selectedId;
+  }
+
+  public static void setSelectedId(int _selectedId) {
+    selectedId = _selectedId;
   }
 
   public void save() {

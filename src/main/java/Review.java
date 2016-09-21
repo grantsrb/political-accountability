@@ -6,6 +6,7 @@ public class Review {
   private int id;
   private int goalId;
   private String description;
+  private static int selectedId = 0;
 
   public Review(int _goalId, String _description) {
     goalId = _goalId;
@@ -22,6 +23,14 @@ public class Review {
 
   public String getDescription() {
     return description;
+  }
+
+  public static int getSelectedId() {
+    return selectedId;
+  }
+
+  public static void setSelectedId(int _selectedId) {
+    selectedId = _selectedId;
   }
 
   public void save() {
