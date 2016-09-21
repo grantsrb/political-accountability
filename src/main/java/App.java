@@ -13,65 +13,57 @@ public class App {
     String layout = "templates/layout.vtl";
 
     get("/",(request,response) -> {
-      Map<String,Object> model = new HashMap<>();
-      model.put("selectedReviewId", Review.getSelectedId());
-      model.put("selectedGoalId", Goal.getSelectedId());
-      model.put("selectedPoliticianId", Politician.getSelectedId());
-      model.put("politicians", Politician.getAll());
-      model.put("goals", Goal.getAll());
-      model.put("reviews", Review.getAll());
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
+      return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
     post("/politicians/new",(request,response) -> {
-      Map<String,Object> model = new HashMap<>();
       String nameInput = request.queryParams("politicianNameInput");
       Politician newPolitician = new Politician(nameInput);
       newPolitician.save();
       Politician.setSelectedId(newPolitician.getId());
-      model.put("selectedReviewId", Review.getSelectedId());
-      model.put("selectedGoalId", Goal.getSelectedId());
-      model.put("selectedPoliticianId", Politician.getSelectedId());
-      model.put("politicians", Politician.getAll());
-      model.put("goals", Goal.getAll());
-      model.put("reviews", Review.getAll());
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
+
+      return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
     post("/goals/new",(request,response) -> {
-      Map<String,Object> model = new HashMap<>();
       int selectedPoliticianId = Politician.getSelectedId();
+
       String descriptionInput = request.queryParams("goalDescriptionInput");
       Goal newGoal = new Goal(descriptionInput, selectedPoliticianId);
       newGoal.save();
       Goal.setSelectedId(newGoal.getId());
-      model.put("selectedReviewId", Review.getSelectedId());
-      model.put("selectedGoalId", Goal.getSelectedId());
-      model.put("selectedPoliticianId", Politician.getSelectedId());
-      model.put("politicians", Politician.getAll());
-      model.put("goals", Goal.getAll());
-      model.put("reviews", Review.getAll());
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
+
+      return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
     post("/reviews/new",(request,response) -> {
-      Map<String,Object> model = new HashMap<>();
       int selectedGoalId = Goal.getSelectedId();
+
       String descriptionInput = request.queryParams("reviewDescriptionInput");
       Review newReview = new Review(selectedGoalId, descriptionInput);
       newReview.save();
       Review.setSelectedId(newReview.getId());
-      model.put("selectedReviewId", Review.getSelectedId());
-      model.put("selectedGoalId", Goal.getSelectedId());
-      model.put("selectedPoliticianId", Politician.getSelectedId());
-      model.put("politicians", Politician.getAll());
-      model.put("goals", Goal.getAll());
-      model.put("reviews", Review.getAll());
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
+
+      return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
+  }
+
+  private static Map<String,Object> createModel_Homepage(){
+    Map<String,Object> model = new HashMap<>();
+    model.put("selectedPoliticianId", Politician.getSelectedId());
+    model.put("selectedGoalId", Goal.getSelectedId());
+    model.put("selectedReviewId", Review.getSelectedId());
+    model.put("politicians", Politician.getAll());
+    if (Politician.getSelectedId() > 0) {
+      model.put("goals", Politician.findById(Politician.getSelectedId()).getGoals());
+      if(Goal.getSelectedId() > 0)
+        model.put("reviews", Goal.findById(Goal.getSelectedId()).getReviews());
+      else
+        model.put("reviews", new ArrayList<Review>());
+    } else {
+      model.put("goals", new ArrayList<Goal>());
+    }
+    model.put("template", "templates/index.vtl");
+    return model;
   }
 }

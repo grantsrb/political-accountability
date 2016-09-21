@@ -71,7 +71,8 @@ public class Goal {
 
   public List<Review> getReviews() {
     try(Connection con = DB.sql2o.open()) {
-      return con.createQuery("SELECT * FROM reviews")
+      return con.createQuery("SELECT * FROM reviews WHERE goalId = :id")
+        .addParameter("id", this.id)
         .executeAndFetch(Review.class);
     }
   }

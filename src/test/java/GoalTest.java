@@ -6,19 +6,8 @@ import static org.junit.Assert.*;
 
 public class GoalTest {
 
-  @Before
-  public void establishConnection() {
-    DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/political_accountability_test", null, null);
-  }
-
-  @After
-  public void tearDown() {
-    try(Connection con = DB.sql2o.open()) {
-      con.createQuery("DELETE FROM goals").executeUpdate();
-      con.createQuery("DELETE FROM politicians").executeUpdate();
-      con.createQuery("DELETE FROM reviews").executeUpdate();
-    }
-  }
+  @Rule
+  public DatabaseRule databaseRule = new DatabaseRule();
 
   @Test
   public void save_savesGoalToDatabase_void() {

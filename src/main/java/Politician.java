@@ -64,7 +64,8 @@ public class Politician {
 
   public List<Goal> getGoals() {
     try(Connection con = DB.sql2o.open()) {
-      return con.createQuery("SELECT * FROM goals")
+      return con.createQuery("SELECT * FROM goals WHERE politicianId = :id")
+        .addParameter("id", this.id)
         .executeAndFetch(Goal.class);
     }
   }
