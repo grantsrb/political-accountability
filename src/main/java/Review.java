@@ -64,7 +64,7 @@ public class Review {
       return false;
     } else {
       Review newReview = (Review) _otherReview;
-      return (this.id == newReview.id) &&
+      return (this.id == newReview.getId()) &&
              (this.goalId == newReview.getGoalId()) &&
              (this.description.equals(newReview.getDescription()));
     }
