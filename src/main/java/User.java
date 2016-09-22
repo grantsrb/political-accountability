@@ -6,6 +6,8 @@ public class User {
   private String userName;
   private String password;
   private int id;
+  private static boolean logInStatus = false;
+  private static User loggedInUser = null;
 
   public User(String _userName, String _password) {
     this.userName = _userName;
@@ -22,6 +24,26 @@ public class User {
 
   public int getId() {
     return this.id;
+  }
+
+  public static boolean getLogInStatus() {
+    return logInStatus;
+  }
+
+  public static void setLogInStatus(boolean _status) {
+    logInStatus = _status;
+  }
+
+  public static User getLoggedInUser() {
+    return loggedInUser;
+  }
+
+  public static void setLoggedInUser(String _userName) {
+    try(Connection con = DB.sql2o.open()) {
+      loggedInUser = con.createQuery("SELECT * FROM users WHERE username = :userName")
+          .addParameter("userName", _userName)
+          .executeAndFetchFirst(User.class);
+    }
   }
 
   public void save() {
@@ -68,5 +90,30 @@ public class User {
     }
   }
 
+  public static boolean validUser(String _userName, String _password) {
+    try(Connection con = DB.sql2o.open()) {
+      User match = con.createQuery("SELECT * FROM users WHERE username = :userName AND password = :password")
+          .addParameter("userName", _userName)
+          .addParameter("password", _password)
+          .executeAndFetchFirst(User.class);
+      if(match == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 
+  public static boolean userAlreadyExists(String _userName) {
+    try(Connection con = DB.sql2o.open()) {
+      User match = con.createQuery("SELECT * FROM users WHERE username = :userName")
+          .addParameter("userName", _userName)
+          .executeAndFetchFirst(User.class);
+      if(match == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 }

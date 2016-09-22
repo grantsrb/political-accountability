@@ -41,4 +41,30 @@ public class UserTest {
     testUser.delete();
     assertEquals(null, User.findById(testUser.getId()));
   }
+
+  @Test
+  public void setLoggedInUser_returnsTheLoggedInUser_User() {
+    User testUser = new User("qwerty", "qwerty");
+    User testUser2 = new User("test", "test");
+    testUser.save();
+    testUser2.save();
+    User.setLoggedInUser("qwerty");
+    assertTrue(User.getLoggedInUser().equals(testUser));
+  }
+
+  @Test
+  public void validUser_returnsTrueIfMatchingUserAndPassword_boolean() {
+    User testUser = new User("qwerty", "qwerty");
+    testUser.save();
+    assertEquals("get methods", true, User.validUser(testUser.getUserName(), testUser.getPassword()));
+    assertEquals("literals", true, User.validUser("qwerty", "qwerty"));
+  }
+
+  @Test
+  public void userAlreadyExists_returnsTrueIfUserNameAlreadyExists_boolean() {
+    User testUser = new User("qwerty", "qwerty");
+    testUser.save();
+    assertEquals("get methods", true, User.userAlreadyExists(testUser.getUserName()));
+    assertEquals("literals", true, User.userAlreadyExists("qwerty"));
+  }
 }
