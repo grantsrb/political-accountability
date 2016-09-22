@@ -64,7 +64,7 @@ public class App {
     post("/new-account", (request,response) -> {
       String userName = request.queryParams("create-user-name");
       String password = request.queryParams("create-password");
-      if (!User.userAlreadyExists(userName)) {
+      if (!User.userAlreadyExists(userName)) { // If user name is valid, directs to home page
         User.setLogInStatus(true);
         User newUser = new User(userName, password);
         newUser.save();
