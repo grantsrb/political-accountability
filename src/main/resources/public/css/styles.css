@@ -1,6 +1,65 @@
-.sign-in {
+body {
+  margin: 0 auto;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  color: black;
+  text-shadow: 0 0 1px white;
+}
+
+p {
+  font-size: 2rem;
+}
+
+li {
+  font-size: 2rem;
+  list-style: none;
+
+}
+
+#main,
+#hack-transparency {
+  height: 1000px;
+}
+
+#main {
+  background-image: url("../img/rhino.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#hack-transparency {
+  background-color: rgba(255,239,213,.666);
+  width: 100%;
+}
+
+.row {
+  margin-top: 20px;
+}
+
+div.jumbotron {
+  background-color: papayawhip;
+  margin-bottom: 0;
+  border-bottom: 5px solid black;
+}
+
+div.jumbotron h1 {
+  text-align: center;
+  font-family: "Arial Black";
+  font-size: 10rem;
+  color: white;
+  text-shadow: 0 0 5px black;
+}
+
+.sign-in{
   position: absolute;
   top: 1em;
   right: 1em;
   float: right;
+}
+
+.signed-in {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  float: left;
 }

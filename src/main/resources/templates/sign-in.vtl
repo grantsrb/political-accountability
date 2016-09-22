@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, intial-scale=1">
-    <title>Political Accountability 'R' Us</title>
+    <title>PolitAccountOpinion</title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="../../css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../css/styles.css" type="text/css">
     <link rel="stylesheet" href="../../css/sign-in.css" type="text/css">
   </head>
   <body>
-    <div class="container">
+    <div id="sign-in-body" class="container">
       <h3>Sign In</h3>
       <form action="/sign-in" method="post">
         <div class="form-group">
@@ -44,7 +45,7 @@
         <p><em class="invalid">Invalid user name, please try again</em></p>
       #end
 
-      <a href="/">Home</a>
+      <a id="back-button" href="/">Back</a>
     </div>
   </body>
 </html>
