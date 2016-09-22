@@ -41,4 +41,13 @@ public class ReviewTest {
     testReview.delete();
     assertEquals(null, Review.findById(testReview.getId()));
   }
+
+  @Test
+  public void update_changesDescription_String() {
+    Review testReview = new Review(1, "Mission Accomplished!");
+    testReview.save();
+    testReview.setDescription("Mission Accomplished...by Obama");
+    assertEquals("getDescription test", "Mission Accomplished...by Obama", testReview.getDescription());
+    assertEquals("database test", "Mission Accomplished...by Obama", Review.findById(testReview.getId()).getDescription());
+  }
 }

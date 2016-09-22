@@ -49,4 +49,13 @@ public class PoliticianTest {
     testPolitician.delete();
     assertEquals(null, Politician.findById(testPolitician.getId()));
   }
+
+  @Test
+  public void setName_changesName_void() {
+    Politician testPolitician = new Politician("Dick Trump");
+    testPolitician.save();
+    testPolitician.setName("Hilary Dickton");
+    assertEquals("getName test", "Hilary Dickton", testPolitician.getName());
+    assertEquals("database Test", "Hilary Dickton", Politician.findById(testPolitician.getId()).getName());
+  }
 }

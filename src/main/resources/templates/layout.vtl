@@ -7,16 +7,20 @@
     <link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="../../css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="../../css/styles.css" type="text/css">
+    #if (!$signedIn)
+      <link rel="stylesheet" href="../../css/hide-forms.css" type="text/css">
+    #end
   </head>
   <body>
     <div class="jumbotron">
       <div class="signed-in">
         #if($signedIn)
           <p>Welcome, $loggedInUser.getUserName()</p>
+        #end
       </div>
       <div class="sign-in">
         #if($signedIn)
-          <form action="/sign-out" method="post">
+          <form action="/sign-out" method="post" id="sign-in-button">
             <button type="submit" class="btn btn-primary">Sign Out</button>
           </form>
         #else

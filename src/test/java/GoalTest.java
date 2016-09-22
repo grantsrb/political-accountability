@@ -50,4 +50,13 @@ public class GoalTest {
     testGoal.delete();
     assertEquals(null, Goal.findById(testGoal.getId()));
   }
+
+  @Test
+  public void update_changesDescription_String() {
+    Goal testGoal = new Goal("Build a shoot your friend", 1);
+    testGoal.save();
+    testGoal.setDescription("Hilary Dickton");
+    assertEquals("getDescription test", "Hilary Dickton", testGoal.getDescription());
+    assertEquals("database test", "Hilary Dickton", Goal.findById(testGoal.getId()).getDescription());
+  }
 }

@@ -21,6 +21,8 @@ public class App {
       Politician newPolitician = new Politician(nameInput);
       newPolitician.save();
       Politician.setSelectedId(newPolitician.getId());
+      Goal.setSelectedId(0);
+      Review.setSelectedId(0);
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
@@ -30,6 +32,7 @@ public class App {
       Goal newGoal = new Goal(descriptionInput, selectedPoliticianId);
       newGoal.save();
       Goal.setSelectedId(newGoal.getId());
+      Review.setSelectedId(0);
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
@@ -76,6 +79,69 @@ public class App {
         return new ModelAndView(model, "templates/sign-in.vtl");
       }
     },new VelocityTemplateEngine());
+
+    post("/sign-out", (request, response) -> {
+      User.setLogInStatus(false);
+      User.setLoggedInUser(null);
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    get("/politicians/:id", (request, response) -> {
+      int politicianId = Integer.parseInt(request.params(":id"));
+      Politician.setSelectedId(politicianId);
+      List<Goal> goals = Politician.findById(politicianId).getGoals();
+      List<Review> reviews = new ArrayList<Review>();
+
+      if (goals.size() > 0) {
+        Goal.setSelectedId(goals.get(0).getId());
+        reviews = Goal.findById(Goal.getSelectedId()).getReviews();
+      }
+      else
+        Goal.setSelectedId(0);
+
+      if (reviews.size() > 0)
+        Review.setSelectedId(reviews.get(0).getId());
+      else
+        Review.setSelectedId(0);
+
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    get("/goals/:id", (request, response) -> {
+      int goalId = Integer.parseInt(request.params(":id"));
+      Goal.setSelectedId(goalId);
+      List<Review> reviews = Goal.findById(goalId).getReviews();
+
+      if (reviews.size() > 0)
+        Review.setSelectedId(reviews.get(0).getId());
+      else
+        Review.setSelectedId(0);
+
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    get("/reviews/:id", (request, response) -> {
+      Review.setSelectedId(Integer.parseInt(request.params(":id")));
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    post("/politicians/delete", (request, response) -> {
+      Politician.findById(Politician.getSelectedId()).delete();
+      Politician.setSelectedId(0);
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    post("/goals/delete", (request, response) -> {
+      Goal.findById(Goal.getSelectedId()).delete();
+      Goal.setSelectedId(0);
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
+
+    post("/reviews/delete", (request, response) -> {
+      Review.findById(Review.getSelectedId()).delete();
+      Review.setSelectedId(0);
+      return new ModelAndView(createModel_Homepage(), layout);
+    },new VelocityTemplateEngine());
   }
 
   private static Map<String,Object> createModel_Homepage(){
@@ -84,6 +150,7 @@ public class App {
     model.put("selectedGoalId", Goal.getSelectedId());
     model.put("selectedReviewId", Review.getSelectedId());
     model.put("politicians", Politician.getAll());
+
     if (Politician.getSelectedId() > 0) {
       model.put("goals", Politician.findById(Politician.getSelectedId()).getGoals());
       if(Goal.getSelectedId() > 0)
@@ -93,6 +160,7 @@ public class App {
     } else {
       model.put("goals", new ArrayList<Goal>());
     }
+
     model.put("signedIn", User.getLogInStatus());
     model.put("loggedInUser", User.getLoggedInUser());
     model.put("template", "templates/index.vtl");

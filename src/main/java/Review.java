@@ -25,6 +25,16 @@ public class Review {
     return description;
   }
 
+  public void setDescription(String _update) {
+    this.description = _update;
+    try (Connection con = DB.sql2o.open()) {
+      con.createQuery("UPDATE reviews SET description = :description WHERE id = :id")
+        .addParameter("description", this.description)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
   public static int getSelectedId() {
     return selectedId;
   }

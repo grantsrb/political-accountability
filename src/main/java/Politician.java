@@ -3,9 +3,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Politician {
+  private static int selectedId = 0;
   private String name;
   private int id;
-  private static int selectedId = 0;
+
 
   public Politician(String _name) {
     this.name = _name;
@@ -13,6 +14,16 @@ public class Politician {
 
   public String getName() {
     return this.name;
+  }
+
+  public void setName(String _update) {
+    this.name = _update;
+    try (Connection con = DB.sql2o.open()) {
+      con.createQuery("UPDATE politicians SET name = :update WHERE id = :id")
+        .addParameter("update", this.name)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
   }
 
   public int getId() {
@@ -72,6 +83,12 @@ public class Politician {
 
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
+      List<Goal> thisPoliticainsGoals = con.createQuery("SELECT * FROM goals WHERE politicianId = :id")
+        .addParameter("id", this.id)
+        .executeAndFetch(Goal.class);
+      for(Goal goal:thisPoliticainsGoals){
+        goal.delete();
+      }
       con.createQuery("DELETE FROM politicians WHERE id = :id")
         .addParameter("id", this.id)
         .executeUpdate();

@@ -17,6 +17,16 @@ public class Goal {
     return this.description;
   }
 
+  public void setDescription(String _update) {
+    this.description = _update;
+    try (Connection con = DB.sql2o.open()) {
+      con.createQuery("UPDATE goals SET description = :description WHERE id = :id")
+        .addParameter("description", this.description)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
   public int getPoliticianId() {
     return this.politicianId;
   }
@@ -79,6 +89,12 @@ public class Goal {
 
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
+      List<Review> thisGoalsReviews = con.createQuery("SELECT * FROM reviews WHERE goalId = :id")
+        .addParameter("id", this.id)
+        .executeAndFetch(Review.class);
+      for(Review review:thisGoalsReviews){
+        review.delete();
+      }
       con.createQuery("DELETE FROM goals WHERE id = :id")
         .addParameter("id", this.id)
         .executeUpdate();
