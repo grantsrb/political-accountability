@@ -26,11 +26,11 @@ public class PoliticianTest {
   @Test
   public void getGoals_returnsAllGoalsFromOneGoal_ListGoal() {
     Politician testPolitician = new Politician("Dick Trump");
+    testPolitician.save();
     Goal testGoal = new Goal("Build a wall", testPolitician.getId());
     Goal testGoal2 = new Goal("Shoot a friend", testPolitician.getId());
     testGoal.save();
     testGoal2.save();
-    testPolitician.save();
     assertTrue(testPolitician.getGoals().get(0).equals(testGoal));
     assertTrue(testPolitician.getGoals().get(1).equals(testGoal2));
   }
