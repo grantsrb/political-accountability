@@ -81,55 +81,57 @@
 
 <div class="row require-log-in">
   <div class="col col-md-4">
-    <form id="politicians-form" class="form-group" name="politicianInput" action="/politicians/new" method="post">
-      <label for="politicianNameInput">Enter a name you would like to add:</label><br>
+    <form id="politicians-form" class="form-group" name="politicianInput" action="/politicians/update" method="post">
+      <label for="politicianNameInput">Add or update a politician's name:</label><br>
       <input id="politicianNameInput" name="politicianNameInput" type="text" placeholder="enter name here" required>
-      <input type="submit" id="politicianSubmit" name="politicianSubmit" value="Add">
-      <input type="submit" id="politicianUpdate" name="politicianUpdate" value="Update">
+
+      <input type="hidden" name="hiddenPoliticianButton">
+      <label>
+        <input type="submit" value="Add" onclick="this.form.hiddenPoliticianButton.value=this.value;this.form.action='/politicians/update';this.form.submit();">
+        #if($selectedPoliticianId > 0)
+          <input type="submit" value="Update" onclick="this.form.hiddenPoliticianButton.value=this.value;this.form.action='/politicians/update';this.form.submit();">
+          <input type="submit" value="Delete" onclick="this.form.hiddenPoliticianButton.value=this.value;this.form.action='/politicians/update';this.form.submit();">
+        #end
+      </label>
+
     </form>
-    #if($selectedPoliticianId > 0)
-      <form action="/politicians/delete" method="post">
-        <button type="submit" class="btn btn-danger">Delete</button>
-      </form>
-      <form action="/politicians/update" method="post">
-        <button type="submit" class="btn btn-warning">Update</button>
-      </form>
-    #end
   </div>
 
   <div class="col col-md-4">
     #if($selectedPoliticianId > 0)
-      <form id="goals-form" class="form-group" name="goalsInput" action="/goals/new" method="post">
-        <label for="goalDescriptionInput">What did this person promise?:</label><br>
-        <input id="goalDescriptionInput" name="goalDescriptionInput" type="text" placeholder="enter a stated goal here" required>
-        <input type="submit" name="goalSubmit" value="Add">
+      <form id="goals-form" class="form-group" name="goalsInput" action="/goals/update" method="post">
+        <label for="goalDescriptionInput">What did this person promise?</label><br>
+        <input id="goalDescriptionInput" name="goalDescriptionInput" type="text" placeholder="enter a goal here" required>
+
+        <input type="hidden" name="hiddenGoalButton">
+        <label>
+          <input type="submit" value="Add" onclick="this.form.hiddenGoalButton.value=this.value;this.form.action='/goals/update';this.form.submit();">
+          #if($selectedGoalId > 0)
+            <input type="submit" value="Update" onclick="this.form.hiddenGoalButton.value=this.value;this.form.action='/goals/update';this.form.submit();">
+            <input type="submit" value="Delete" onclick="this.form.hiddenGoalButton.value=this.value;this.form.action='/goals/update';this.form.submit();">
+          #end
+        </label>
+
       </form>
-      #if ($selectedGoalId > 0)
-        <form action="/goals/delete" method="post">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        <form action="/goals/update" method="post">
-          <button type="submit" class="btn btn-warning">Update</button>
-        </form>
-      #end
     #end
   </div>
 
   <div class="col col-md-4">
     #if($selectedPoliticianId > 0 && $selectedGoalId > 0)
-      <form id="reviews-form" class="form-group" name="reviewsInput" action="/reviews/new" method="post">
+      <form id="reviews-form" class="form-group" name="reviewsInput" action="/reviews/update" method="post">
         <label for="reviewDescriptionInput">How has that panned out?:</label><br>
         <input id="reviewDescriptionInput" name="reviewDescriptionInput" type="text" placeholder="enter your review here" required>
-        <input type="submit" name="goalSubmit" value="Add">
+
+        <input type="hidden" name="hiddenReviewButton">
+        <label>
+          <input type="submit" value="Add" onclick="this.form.hiddenReviewButton.value=this.value;this.form.action='/reviews/update';this.form.submit();">
+          #if($selectedReviewId > 0)
+            <input type="submit" value="Update" onclick="this.form.hiddenReviewButton.value=this.value;this.form.action='/reviews/update';this.form.submit();">
+            <input type="submit" value="Delete" onclick="this.form.hiddenReviewButton.value=this.value;this.form.action='/reviews/update';this.form.submit();">
+          #end
+        </label>
+
       </form>
-      #if ($selectedReviewId > 0)
-        <form action="/reviews/delete" method="post">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        <form action="/reviews/update" method="post">
-          <button type="submit" class="btn btn-warning">Update</button>
-        </form>
-      #end
     #end
   </div>
 </div>

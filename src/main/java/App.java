@@ -16,32 +16,86 @@ public class App {
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
-    post("/politicians/new",(request,response) -> {
+    post("/politicians/update",(request,response) -> {
       String nameInput = request.queryParams("politicianNameInput");
-      Politician newPolitician = new Politician(nameInput);
-      newPolitician.save();
-      Politician.setSelectedId(newPolitician.getId());
-      Goal.setSelectedId(0);
-      Review.setSelectedId(0);
+      switch (request.queryParams("hiddenPoliticianButton")) {
+        case "Add":
+          if(!nameInput.equals("")) {
+            Politician newPolitician = new Politician(nameInput);
+            newPolitician.save();
+            Politician.setSelectedId(newPolitician.getId());
+            Goal.setSelectedId(0);
+            Review.setSelectedId(0);
+          }
+          break;
+        case "Update":
+          if(!nameInput.equals("") && Politician.getSelectedId() > 0)
+            Politician.findById(Politician.getSelectedId()).setName(nameInput);
+          break;
+        case "Delete":
+          if(Politician.getSelectedId() > 0)
+            Politician.findById(Politician.getSelectedId()).delete();
+            Politician.setSelectedId(0);
+            Goal.setSelectedId(0);
+            Review.setSelectedId(0);
+          break;
+        default:
+          System.out.println("Something has gone horribly wrong!!!");
+      }
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
-    post("/goals/new",(request,response) -> {
+    post("/goals/update",(request,response) -> {
       int selectedPoliticianId = Politician.getSelectedId();
       String descriptionInput = request.queryParams("goalDescriptionInput");
-      Goal newGoal = new Goal(descriptionInput, selectedPoliticianId);
-      newGoal.save();
-      Goal.setSelectedId(newGoal.getId());
-      Review.setSelectedId(0);
+      switch (request.queryParams("hiddenGoalButton")) {
+        case "Add":
+          if(!descriptionInput.equals("")) {
+            Goal newGoal = new Goal(descriptionInput, selectedPoliticianId);
+            newGoal.save();
+            Goal.setSelectedId(newGoal.getId());
+            Review.setSelectedId(0);
+          }
+          break;
+        case "Update":
+          if(!descriptionInput.equals("") && Goal.getSelectedId() > 0)
+            Goal.findById(Goal.getSelectedId()).setDescription(descriptionInput);
+          break;
+        case "Delete":
+          if(Goal.getSelectedId() > 0)
+            Goal.findById(Goal.getSelectedId()).delete();
+            Goal.setSelectedId(0);
+            Review.setSelectedId(0);
+          break;
+        default:
+          System.out.println("Something has gone horribly wrong!!!");
+      }
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
-    post("/reviews/new",(request,response) -> {
+    post("/reviews/update",(request,response) -> {
       int selectedGoalId = Goal.getSelectedId();
       String descriptionInput = request.queryParams("reviewDescriptionInput");
-      Review newReview = new Review(selectedGoalId, descriptionInput);
-      newReview.save();
-      Review.setSelectedId(newReview.getId());
+      switch (request.queryParams("hiddenReviewButton")) {
+        case "Add":
+          if(!descriptionInput.equals("")) {
+            Review newReview = new Review(selectedGoalId, descriptionInput);
+            newReview.save();
+            Review.setSelectedId(newReview.getId());
+          }
+          break;
+        case "Update":
+          if(!descriptionInput.equals("") && Review.getSelectedId() > 0)
+            Review.findById(Review.getSelectedId()).setDescription(descriptionInput);
+          break;
+        case "Delete":
+          if(Review.getSelectedId() > 0)
+            Review.findById(Review.getSelectedId()).delete();
+            Review.setSelectedId(0);
+          break;
+        default:
+          System.out.println("Something has gone horribly wrong!!!");
+      }
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
@@ -89,57 +143,20 @@ public class App {
     get("/politicians/:id", (request, response) -> {
       int politicianId = Integer.parseInt(request.params(":id"));
       Politician.setSelectedId(politicianId);
-      List<Goal> goals = Politician.findById(politicianId).getGoals();
-      List<Review> reviews = new ArrayList<Review>();
-
-      if (goals.size() > 0) {
-        Goal.setSelectedId(goals.get(0).getId());
-        reviews = Goal.findById(Goal.getSelectedId()).getReviews();
-      }
-      else
-        Goal.setSelectedId(0);
-
-      if (reviews.size() > 0)
-        Review.setSelectedId(reviews.get(0).getId());
-      else
-        Review.setSelectedId(0);
-
+      Goal.setSelectedId(0);
+      Review.setSelectedId(0);
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
     get("/goals/:id", (request, response) -> {
       int goalId = Integer.parseInt(request.params(":id"));
       Goal.setSelectedId(goalId);
-      List<Review> reviews = Goal.findById(goalId).getReviews();
-
-      if (reviews.size() > 0)
-        Review.setSelectedId(reviews.get(0).getId());
-      else
-        Review.setSelectedId(0);
-
+      Review.setSelectedId(0);
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
 
     get("/reviews/:id", (request, response) -> {
       Review.setSelectedId(Integer.parseInt(request.params(":id")));
-      return new ModelAndView(createModel_Homepage(), layout);
-    },new VelocityTemplateEngine());
-
-    post("/politicians/delete", (request, response) -> {
-      Politician.findById(Politician.getSelectedId()).delete();
-      Politician.setSelectedId(0);
-      return new ModelAndView(createModel_Homepage(), layout);
-    },new VelocityTemplateEngine());
-
-    post("/goals/delete", (request, response) -> {
-      Goal.findById(Goal.getSelectedId()).delete();
-      Goal.setSelectedId(0);
-      return new ModelAndView(createModel_Homepage(), layout);
-    },new VelocityTemplateEngine());
-
-    post("/reviews/delete", (request, response) -> {
-      Review.findById(Review.getSelectedId()).delete();
-      Review.setSelectedId(0);
       return new ModelAndView(createModel_Homepage(), layout);
     },new VelocityTemplateEngine());
   }
